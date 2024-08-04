@@ -1,35 +1,51 @@
 #include<iostream>
+
 #include"ChiSquareTest.h"
+#include"LargestNormalizedResidualTest.h"
+#include"HypothesisTest.h"
 
 int main()
 {   
-    const int size = 5, df = 4;
-    const float cl = 0.99;
 
-    const float measurement[] = {1.0, 1.2, 1.6, 1.0, 0.9};
-    const float estimatedMeasurements[] = {0.5, 2.4, 0.8, 0.8, 4.0};
-    const float covarianceMatrix[][size] = {{1, 0,0,0,0},
-                                             {0,1,0,0,0},
-                                             {0,0,1,0,0},
-                                             {0,0,0,1,0},
-                                             {0,0,0,0,1}};
+    const int degrees_of_freedom = 4;
+    const float condidence_level = 0.99;
+    const int number_of_measurements = 4;
+    const int number_of_bus = 2;
+    const float threshold = 3.0;
+    const float n_beta = -2.32, n_maximus = 3.0;
 
-    const float *cmPtr = covarianceMatrix[0];
     
-/* 
-    const int size = 3, df = 1;
-    const float cl = 0.95;
+    float measurementArray[] = {3.90, -4.05, -0.48, 2.04};
 
-    const float measurement[] = {-4.70, 2.04, -1.90};
-    const float estimatedMeasurements[] = {-4.70, 1.97, -1.97};
-    const double covarianceMatrix[][size] = {{0.004, 0,0},
-                                             {0,0.002,0},
-                                             {0,0,0.002}};
+    float estimatedArray[] = {3.992, -3.61, -0.374, 2.09};
 
-    const double *cmPtr = covarianceMatrix[0];  */                                      
+    float jacobianMatrix[][number_of_bus] = {{-50, -100},
+                                             {150,-100},
+                                             {-100, 200},
+                                             {0, 100}};
 
-    ChiSquareDistribution X2(size,df,cl);
-    X2.ChiSquareTest(measurement, estimatedMeasurements, cmPtr);
+    float gainMatrix[][number_of_bus] = {{18125000, -18750000},
+                                         {-18750000, 57500000}};
+
+    float covarianceMatrix[][number_of_measurements] = {{0.001,0,0,0},
+                                                        {0,0.004,0,0},
+                                                        {0,0, 0.001,0},
+                                                        {0,0,0, 0.002}};
+
+    float *mPtr = measurementArray;
+    float *emPtr = estimatedArray;
+    float *jPtr = jacobianMatrix[0];
+    float *gPtr = gainMatrix[0];
+    float *cmPtr = covarianceMatrix[0];
+
+    ChiSquareDistribution X2(number_of_measurements,degrees_of_freedom,condidence_level);
+    X2.ChiSquareTest(mPtr, emPtr, cmPtr);
+
+    NormalizedResidual NR(number_of_measurements,threshold);
+    NR.LargestNormalizedResidualTest(mPtr,emPtr,jPtr,gPtr,cmPtr,number_of_bus);
+
+    HypothesisTest HT(n_beta,n_maximus,number_of_measurements,threshold);
+    HT.HypothesisTestIdentification(mPtr,emPtr,jPtr,gPtr,cmPtr,number_of_bus);
 
     return 0;
 }

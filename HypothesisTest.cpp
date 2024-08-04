@@ -26,11 +26,11 @@ HypothesisTest::~HypothesisTest(){
 }
 
 //Funcoes SET ============================================================
-void HypothesisTest::setNBeta(float nBeta){
+void HypothesisTest::setNBeta(const float nBeta){
     N_beta = nBeta;
 }
 
-void HypothesisTest::setNMaximus(float nMaximus){
+void HypothesisTest::setNMaximus(const float nMaximus){
     N_maximus = nMaximus;
 }
 
@@ -40,11 +40,11 @@ void HypothesisTest::setNumberSelectedMeasurements(int numberSelectedMeasurement
 
 //Funcoes GET ===========================================================
 
-float HypothesisTest::setNBeta() const{
+float HypothesisTest::getNBeta() const{
     return N_beta;
 }
 
-float HypothesisTest::setNMaximus() const{
+float HypothesisTest::getNMaximus() const{
     return N_maximus;
 }
 

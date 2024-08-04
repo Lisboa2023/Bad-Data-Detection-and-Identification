@@ -9,16 +9,16 @@ class HypothesisTest:public NormalizedResidual{
         ~HypothesisTest();
 
         //Funcoes SET ============================================================
-        void setNBeta(float);
-        void setNMaximus(float);
+        void setNBeta(const float);
+        void setNMaximus(const float);
         void setNumberSelectedMeasurements(int);
 
         //=======================================================================     
 
         //Funcoes GET ===========================================================
         int getNumberSelectedMeasurements() const;
-        float setNBeta() const;
-        float setNMaximus() const;
+        float getNBeta() const;
+        float getNMaximus() const;
 
         float *getSuspectSelectedMeasurements()const;
         float *getSuspectResidualCovarianceMatrix()const;
