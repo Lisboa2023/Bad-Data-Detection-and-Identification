@@ -30,10 +30,6 @@ class NormalizedResidual{
         float *getNormalizedMeasurements() const;
 
         //=======================================================================
-        
-        float *CalculateInverseMatrix(float *, const int);
-        float *CalculateTransposedMatrix(const float *, const int, const int);
-        float *MultiplyArray(const float *, const float *, const int, const int, const int, const int);
 
         void CalculateHatMatrix(float *, float *,float *, const int);
         void CalculateSensitivityMatrix();

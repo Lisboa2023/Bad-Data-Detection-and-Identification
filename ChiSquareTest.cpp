@@ -1,5 +1,7 @@
 #include<iostream>
+#include<iomanip>
 #include<cmath>
+
 #include"ChiSquareTest.h"
 
 ChiSquareDistribution::ChiSquareDistribution(const int SIZE, const int DF, const float CL){
@@ -94,10 +96,11 @@ void ChiSquareDistribution::ChiSquareCumulativeDistributionFunction(const float 
 
 void ChiSquareDistribution::printResult() const{
     std::cout << std::endl
-              << "Confidence Level: " << getConfidenceLevel() << std::endl;
+              << "BAD DATA DETECTION: CHI SQUARE TEST" << std::endl
+              << "Confidence Level: " << std::setw(10) << getConfidenceLevel() << std::endl;
     
-    std::cout << "xt = " << getChiSquaredVariable() << std::endl
-              << "P = " << getProbability() << std::endl;
+    std::cout << "xt = " << std::setw(10) << getChiSquaredVariable() << std::endl
+              << "P = " << std::setw(10) << getProbability() << std::endl;
 
     if(getProbability() > getConfidenceLevel()){
         std::cout << std::endl 

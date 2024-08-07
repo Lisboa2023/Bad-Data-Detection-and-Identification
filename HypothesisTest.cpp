@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iomanip>
 
+#include "template.h"
 #include "LargestNormalizedResidualTest.h"
 #include "HypothesisTest.h"
 
@@ -342,6 +343,7 @@ void HypothesisTest::HypothesisTestIdentification(float *measurementArray, float
     CalculateHatMatrix(jacobianMatrix, gainMatrix, covarianceMatrix,length);
     CalculateSensitivityMatrix();
     CalculateResidualCovarianceMatrix(covarianceMatrix);
+
     CalculateResidualMeasurements(measurementArray,estimatedArray);
     CalculateNormalizedResidualMeasurements();
 
@@ -376,5 +378,77 @@ void HypothesisTest::HypothesisTestIdentification(float *measurementArray, float
     }
 
     std::cout << "Message: All the errors in the measurement set were identified" << std::endl << std::endl;
+    
+}
+
+void HypothesisTest::BadDataIdentification(float *measurementArray, float *estimatedArray, float *jacobianMatrix, float *gainMatrix, float *covarianceMatrix,const int length){
+
+    std::cout << std::endl
+              << "BAD DATA IDENTIFICATION" << std::endl
+              << "LARGEST NORMALIZED RESIDUAL TEST" << std::endl;
+    CalculateHatMatrix(jacobianMatrix, gainMatrix, covarianceMatrix,length);
+    CalculateSensitivityMatrix();
+    CalculateResidualCovarianceMatrix(covarianceMatrix);
+
+    float largestResidual;
+    int position;
+
+    for(int i=0; i < getNumberOfMeasurements(); i++){
+        CalculateResidualMeasurements(measurementArray,estimatedArray);
+        CalculateNormalizedResidualMeasurements();
+        if(i==0){
+            std::cout << "Residual Measurement Set: " << std::endl; 
+            print(getResidualMeasurements(), 1,getNumberOfMeasurements());
+            std::cout << std::endl << "Normalized Residual Measurement Set: " << std::endl; 
+            print(getNormalizedMeasurements(), 1, getNumberOfMeasurements());
+            std::cout << std::endl << "Threshold: " << std::setprecision(3) << getThreshold() << std::endl;
+
+            SelectSuspectMeasurements();
+            SelectSuspectResidualCovarianceMatrix();
+            SelectSuspectResidualMeasurements();
+        }
+        FindLargestResidual(largestResidual, position);
+        if (largestResidual > getThreshold()){ 
+            DeleteError(getThreshold(), largestResidual, position,measurementArray,estimatedArray);
+            print(getNormalizedMeasurements(), 1, getNumberOfMeasurements());
+        }
+        else{
+            std::cout << std::endl << "Message: Measurement set free of errors!" << std::endl <<
+            std::endl;
+            break;
+        }
+    }
+
+    std::cout << std::endl
+              << "HYPOTHESIS TEST" << std::endl;
+
+    std::cout << "Suspect Residual Measurements" << std::endl;
+    print(getSuspectResidualMeasurements(),1,getNumberSelectedMeasurements());
+
+    SelectSensitivityMatrixSS();
+    std::cout << "Sensitivity Matrix SS" << std::endl;
+    print(getSensitivityMatrixSS(),getNumberSelectedMeasurements(),getNumberSelectedMeasurements());
+
+    while (getNumberSelectedMeasurements() > new_number_suspect_measurements)
+    {
+    
+        CalculateInverseSensitivityMatrixSS();
+        std::cout << "Inverse Sensitivity Matrix SS" << std::endl;
+        print(getInverseSensitivityMatrixSS(),getNumberSelectedMeasurements(),getNumberSelectedMeasurements());
+        CalculateEstimatedErrorMeasurements();
+        std::cout << "Estimated Error" << std::endl;
+        print(estimated_error_measurements,1,getNumberSelectedMeasurements());
+        CalculateNMeasurements();
+        std::cout << "N measurements" << std::endl;
+        print(N_measurements,1,getNumberSelectedMeasurements());
+        CalculateThersholdMeasurements();
+        std::cout << "Threshold" << std::endl;    
+        print(threshold_measurements,1,getNumberSelectedMeasurements());
+        std::cout << "Measurements Identified with Error" << std::endl;
+        SelectNewSuspectMeasurements();
+        
+    }
+
+    std::cout << "Message: All the errors in the measurement set were identified" << std::endl;
     
 }
