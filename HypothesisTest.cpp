@@ -409,6 +409,7 @@ void HypothesisTest::BadDataIdentification(float *measurementArray, float *estim
         }
         FindLargestResidual(largestResidual, position);
         if (largestResidual > getThreshold()){ 
+            std::cout << "Message: ERROR IDENTIFIED" << std::endl;
             DeleteError(getThreshold(), largestResidual, position,measurementArray,estimatedArray);
             print(getNormalizedMeasurements(), 1, getNumberOfMeasurements());
         }

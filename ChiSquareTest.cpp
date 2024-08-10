@@ -99,7 +99,7 @@ void ChiSquareDistribution::printResult() const{
               << "BAD DATA DETECTION: CHI SQUARE TEST" << std::endl
               << "Confidence Level: " << std::setw(10) << getConfidenceLevel() << std::endl;
     
-    std::cout << "xt = " << std::setw(10) << getChiSquaredVariable() << std::endl
+    std::cout << "Y = " << std::setw(10) << getChiSquaredVariable() << std::endl
               << "P = " << std::setw(10) << getProbability() << std::endl;
 
     if(getProbability() > getConfidenceLevel()){
