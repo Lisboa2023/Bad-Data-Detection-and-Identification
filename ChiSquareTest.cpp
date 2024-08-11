@@ -129,4 +129,3 @@ void ChiSquareDistribution::ChiSquareTest(float variable){
 
 }
 
-
